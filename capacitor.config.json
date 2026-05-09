@@ -1,0 +1,12 @@
+{
+  "appId": "com.thedavefullante.attendance",
+  "appName": "TinTout",
+  "webDir": "dist",
+  "plugins": {
+    "GoogleAuth": {
+      "scopes": ["profile", "email", "https://www.googleapis.com/auth/spreadsheets"],
+      "serverClientId": "1056922617966-epeavfvp3fu15fpcremq6fh3k063kv8b.apps.googleusercontent.com",
+      "forceCodeForRefreshToken": true
+    }
+  }
+}

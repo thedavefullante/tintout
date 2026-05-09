@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Opening TinTout...</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0a0f1e;
+      --card: #111827;
+      --border: rgba(255,255,255,0.07);
+      --accent: #3b82f6;
+      --accent-glow: rgba(59,130,246,0.35);
+      --text: #f1f5f9;
+      --muted: #64748b;
+      --success: #10b981;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    /* Ambient background blobs */
+    .blob {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.18;
+      pointer-events: none;
+      animation: drift 8s ease-in-out infinite alternate;
+    }
+    .blob-1 {
+      width: 400px; height: 400px;
+      background: #3b82f6;
+      top: -100px; left: -100px;
+      animation-delay: 0s;
+    }
+    .blob-2 {
+      width: 300px; height: 300px;
+      background: #6366f1;
+      bottom: -80px; right: -80px;
+      animation-delay: 3s;
+    }
+    @keyframes drift {
+      from { transform: translate(0, 0) scale(1); }
+      to   { transform: translate(30px, 20px) scale(1.08); }
+    }
+
+    /* Card */
+    .card {
+      position: relative;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      padding: 48px 40px 40px;
+      max-width: 380px;
+      width: calc(100% - 40px);
+      text-align: center;
+      box-shadow: 0 32px 80px rgba(0,0,0,0.5), 0 0 0 1px var(--border);
+      animation: slideUp 0.5s cubic-bezier(0.16,1,0.3,1) both;
+    }
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(30px) scale(0.97); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    /* Logo mark */
+    .logo-wrap {
+      position: relative;
+      width: 72px; height: 72px;
+      margin: 0 auto 24px;
+    }
+    .logo-ring {
+      position: absolute; inset: 0;
+      border-radius: 50%;
+      border: 2px solid transparent;
+      background: linear-gradient(135deg, var(--accent), #6366f1) border-box;
+      -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: destination-out;
+      mask-composite: exclude;
+      animation: spin 3s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .logo-inner {
+      position: absolute; inset: 8px;
+      background: linear-gradient(135deg, #1d4ed8, #4f46e5);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 0 24px var(--accent-glow);
+    }
+    .logo-inner svg { width: 28px; height: 28px; }
+
+    /* Text */
+    .app-name {
+      font-family: 'Syne', sans-serif;
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      background: linear-gradient(135deg, #fff 30%, #94a3b8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 8px;
+    }
+    .tagline {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.5;
+      margin-bottom: 32px;
+    }
+
+    /* Progress bar */
+    .progress-track {
+      height: 3px;
+      background: rgba(255,255,255,0.06);
+      border-radius: 99px;
+      overflow: hidden;
+      margin-bottom: 12px;
+    }
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--accent), #6366f1);
+      border-radius: 99px;
+      transition: width 0.1s linear;
+      box-shadow: 0 0 8px var(--accent-glow);
+    }
+    .progress-label {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 28px;
+    }
+
+    /* Status badge */
+    .status {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 6px 14px;
+      border-radius: 99px;
+      background: rgba(59,130,246,0.1);
+      border: 1px solid rgba(59,130,246,0.2);
+      font-size: 12px;
+      font-weight: 500;
+      color: #93c5fd;
+      margin-bottom: 28px;
+      transition: all 0.4s ease;
+    }
+    .status.success {
+      background: rgba(16,185,129,0.1);
+      border-color: rgba(16,185,129,0.2);
+      color: #6ee7b7;
+    }
+    .status-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      animation: pulse 1.2s ease-in-out infinite;
+    }
+    .status.success .status-dot {
+      background: var(--success);
+      animation: none;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50%       { opacity: 0.4; transform: scale(0.7); }
+    }
+
+    /* Manual button */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      padding: 14px 20px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, var(--accent), #4f46e5);
+      color: #fff;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      font-weight: 500;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 8px 24px var(--accent-glow);
+      transition: all 0.2s ease;
+      margin-bottom: 12px;
+    }
+    .btn:hover { opacity: 0.9; transform: translateY(-1px); box-shadow: 0 12px 32px var(--accent-glow); }
+    .btn:active { transform: scale(0.98); }
+
+    .btn-ghost {
+      background: rgba(255,255,255,0.04);
+      box-shadow: none;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .btn-ghost:hover { background: rgba(255,255,255,0.07); box-shadow: none; color: var(--text); }
+
+    .divider {
+      font-size: 11px;
+      color: var(--muted);
+      margin: 4px 0 10px;
+      opacity: 0.6;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+
+  <div class="card">
+
+    <!-- Logo -->
+    <div class="logo-wrap">
+      <div class="logo-ring"></div>
+      <div class="logo-inner">
+        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/>
+          <polyline points="12 6 12 12 16 14"/>
+        </svg>
+      </div>
+    </div>
+
+    <h1 class="app-name">TinTout</h1>
+    <p class="tagline">Redirecting you to the app…<br/>Please wait a moment.</p>
+
+    <!-- Status -->
+    <div class="status" id="statusBadge">
+      <span class="status-dot"></span>
+      <span id="statusText">Launching TinTout...</span>
+    </div>
+
+    <!-- Progress -->
+    <div class="progress-track">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+    <p class="progress-label" id="progressLabel">Connecting to app...</p>
+
+    <!-- Manual open -->
+    <a href="tintout://open" class="btn" id="openBtn">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/>
+      </svg>
+      Open TinTout
+    </a>
+
+    <p class="divider">or</p>
+
+    <button class="btn btn-ghost" onclick="window.close()">
+      Dismiss
+    </button>
+
+  </div>
+
+  <script>
+    const DEEP_LINK = "tintout://open"
+    const FALLBACK_URL = "https://play.google.com/store/apps/details?id=com.thedavefullante.attendance"
+
+    const progressFill = document.getElementById('progressFill')
+    const progressLabel = document.getElementById('progressLabel')
+    const statusBadge = document.getElementById('statusBadge')
+    const statusText = document.getElementById('statusText')
+
+    let progress = 0
+    const duration = 3000 // 3 seconds before fallback
+    const interval = 50
+    const step = (interval / duration) * 100
+
+    // Animate progress bar
+    const timer = setInterval(() => {
+      progress = Math.min(progress + step, 100)
+      progressFill.style.width = progress + '%'
+
+      if (progress >= 30 && progress < 70) {
+        progressLabel.textContent = 'Opening app...'
+      } else if (progress >= 70) {
+        progressLabel.textContent = 'Almost there...'
+      }
+
+      if (progress >= 100) clearInterval(timer)
+    }, interval)
+
+    // Attempt deep link immediately
+    window.location.href = DEEP_LINK
+
+    // After 3s, if still on page, show fallback
+    setTimeout(() => {
+      statusBadge.classList.add('success')
+      statusText.textContent = 'App not detected — redirecting...'
+      progressLabel.textContent = 'Opening Play Store as fallback'
+
+      setTimeout(() => {
+        window.location.href = FALLBACK_URL
+      }, 1000)
+    }, 3000)
+  </script>
+
+</body>
+</html>
